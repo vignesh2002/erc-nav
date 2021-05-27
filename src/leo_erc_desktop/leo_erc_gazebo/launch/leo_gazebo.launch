@@ -1,0 +1,43 @@
+<launch>
+
+  <arg name="fixed" default="false"/>
+  <arg name="robot_ns" default="/"/>
+  <arg name="model_name" default="leo"/>
+
+  <arg name="world_name" default="worlds/empty.world"/>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="false"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
+  </include>
+
+  <include file="$(find leo_erc_gazebo)/launch/spawn_robot.launch"
+           pass_all_args="true"/>
+
+<!-- AR Tag -->
+ <arg name="marker_size"          default="30.0" />
+    <arg name="max_new_marker_error" default="0.15" />
+    <arg name="max_track_error"      default="0.15" />
+
+    <arg name="cam_image_topic"      default="/camera/image_raw" />
+    <arg name="cam_info_topic"       default="/camera/camera_info" />
+    <arg name="output_frame"         default="/camera_frame" />
+
+    <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+		<param name="marker_size"           type="double" value="$(arg marker_size)" />
+		<param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+		<param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+		<param name="output_frame"          type="string" value="$(arg output_frame)" />
+
+		<remap from="camera_image"  to="$(arg cam_image_topic)" />
+		<remap from="camera_info"   to="$(arg cam_info_topic)" />
+	</node>
+
+</launch>

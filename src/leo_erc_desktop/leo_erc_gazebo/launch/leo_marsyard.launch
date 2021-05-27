@@ -1,0 +1,14 @@
+ <launch>
+
+  <include file="$(find leo_erc_gazebo)/launch/leo_gazebo.launch"
+           pass_all_args="true">
+    <arg name="world_name" value="$(find leo_erc_gazebo_worlds)/worlds/marsyard2020.world"/>
+  </include>
+
+<!-- depth to laserscan -->
+    <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+        <param name="scan_height" value="10"/> 
+        <param name="output_frame_id" value="base_link"/>
+        <remap from="image" to="zed2/depth/depth_registered" />
+    </node>
+</launch>
